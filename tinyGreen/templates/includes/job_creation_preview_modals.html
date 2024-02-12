@@ -1,0 +1,606 @@
+<!-- Button trigger modal 
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+  -->
+<style>
+    .modal-content {
+        color: rgb(30, 29, 29);
+
+    }
+</style>
+<!-- Modal -->
+<div class="modal fade" id="job_preview_modals" tabindex="-1" aria-labelledby="job_creation_preview_label"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content container">
+            <div class="modal-header">
+                <h5 class="modal-title" id="job_creation_preview_label">Preview Job Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!--preview of small job post START-->
+            <span class="text-muted">This is how the card will appear on the job board.</span>
+            <div style="display: flex; justify-content: center;">
+                <div class="col-lg-6 col-md-6 col-12 mt-4 pt-2">
+                    <div class="card h-100 border-0 rounded shadow hover-over text-start">
+                        <div>
+
+                            <div class="card-body p-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5 class="card-title">
+                                            <span id="preview-title"></span>
+                                        </h5>
+                                        <div class="mt-3 d-flex">
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5" />
+                                                    <path
+                                                        d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85z" />
+                                                </svg>
+                                                <span id="preview-type"></span>
+                                            </span>
+                                            <span class="text-muted ms-2">
+                                                Start
+                                                <span id="preview-startdate"></span>
+                                            </span>
+        
+                                            <span class="badge bg-primary ms-auto" id="asap-badge-small-preview"
+                                                style="display: none;">ASAP</span>
+        
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        
+                                        <div class="mt-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                                                <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                            </svg>
+                                            <span>
+                                                <span id="preview-location"></span>
+                                            </span>
+                                        </div>
+        
+                                        <div class="mt-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                class="bi bi-clock" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
+                                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
+                                            </svg>
+                                            <span>
+        
+                                                <span id="preview-default-schedule" style="display: none;">Monday to
+                                                    Friday</span>
+                                                <span id="preview-monday-schedule" style="display: none;">Monday</span>
+                                                <span id="preview-tuesday-schedule" style="display: none;">Tuesday</span>
+                                                <span id="preview-wednesday-schedule" style="display: none;">Wednesday</span>
+                                                <span id="preview-thursday-schedule" style="display: none;">Thursday</span>
+                                                <span id="preview-friday-schedule" style="display: none;">Friday</span>
+                                                <span id="preview-saturday-schedule" style="display: none;">Saturday</span>
+                                                <span id="preview-sunday-schedule" style="display: none;">Sunday</span>
+                                                <span id="preview-unspecified-schedule" style="display: none;"
+                                                    class="text-danger">Unspecified</span>
+                                            </span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                class="bi bi-cash-coin" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                    d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0" />
+                                                <path
+                                                    d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195z" />
+                                                <path
+                                                    d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083q.088-.517.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1z" />
+                                                <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 6 6 0 0 1 3.13-1.567" />
+                                            </svg>
+                                            <span>
+                                                <span id="preview-salary"></span> <span>&#8361;</span> / <span
+                                                    id="preview-payment-type"></span>
+        
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 d-flex flex-column justify-content-end">
+                                        <div class="btn btn-primary box-shadow-primary mt-3" aria-disabled="true" disabled>
+                                            view job
+                                            </div>
+                                    </div>
+                                </div>
+                            </div><!--end card body-->
+
+                            <div class="card-footer text-muted text-start d-flex justify-content-between">
+                                <div>
+                                    New Post !
+                                </div>
+                                <div>
+                                    <span id="preview-muted-date" class="text-muted"></span>
+
+                                    <script>
+                                        // Get today's date
+                                        var today = new Date();
+
+                                        // Get the month and day
+                                        var month = today.getMonth() + 1;
+                                        var day = today.getDate();
+
+                                        // Format the date as MM-DD
+                                        var formattedDate = month.toString().padStart(2, '0') + '/' + day.toString().padStart(2, '0');
+
+                                        // Update the content of the span element
+                                        document.getElementById('preview-muted-date').textContent = formattedDate;
+                                    </script>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--end col-->
+            </div>
+            <!--preview of small job post END-->
+            <hr>
+            <span class="text-muted">When users visit your post, this is how it will appear.</span>
+            <!--Preview of Big Job Post START-->
+            <div class="p-3">
+                <div class="text-start">
+                    <h1 style="word-wrap: break-word;" id="preview-title-big"></h1>
+
+                    <span class="badge bg-info ms-auto" id="asap-badge-big-preview" style="display: none;">
+                        ASAP
+                    </span>
+
+                    <div class="ms-auto preview-muted-date">
+                        <div class="ms-auto text-muted">
+                            posted on <span class='text-muted' id="posted-on"></span>
+                            <script>
+                                // Get today's date
+                                var today = new Date();
+
+                                // Get the month and day
+                                var month = today.getMonth() + 1;
+                                var day = today.getDate();
+
+                                // Format the date as MM-DD
+                                var formattedDate = month.toString().padStart(2, '0') + '/' + day.toString().padStart(2, '0');
+
+                                // Update the content of the span element
+                                document.getElementById('posted-on').textContent = formattedDate;
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column flex-md-row mt-4 justify-content-between">
+                    <div class="d-flex align-items-center pb-3 mb-2">
+                        <a class="d-flex align-items-center text-primary text-decoration-none" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2zm-2 9.8V4.698l5.803 3.546zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 9.671V4.697l-5.803 3.546.338.208A4.5 4.5 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671" />
+                                <path
+                                    d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791" />
+                            </svg>
+                            <span class="fs-4 ms-3">
+                                {{recruiter_profile.contact_email_address}}
+                            </span>
+                        </a>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <div type="button" class="btn btn-green mb-1 disabled" disabled>Easy Apply</div>
+                        <span class="form-text">Apply to his job in one click.</span>
+                    </div>
+                </div>
+
+                <div class="row g-3 text-start mt-2">
+                    <div class="col-md-6 fw-normal">
+                        <span class="fs-4">work information</span>
+                        <ul class="list-group list-group-flush mt-4">
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="fw-bold">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5" />
+                                            <path
+                                                d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85z" />
+                                        </svg>
+                                        <span id="preview-type-big"></span>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="text-muted">
+                                    Start on:
+                                    <span id="preview-startdate-big"></span>
+                                </span>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                        <path
+                                            d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                    </svg>
+                                    <span class="fw-bold">
+                                        Location:
+                                    </span>
+                                    <span id="preview-location-big"></span>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <span style="word-wrap: break-word;">
+                                    <span id="preview-location-details"></span>
+                                </span>
+                            </li>
+
+
+                            <li class="list-group-item">
+                                <div class="mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-cash-coin" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0" />
+                                        <path
+                                            d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195z" />
+                                        <path
+                                            d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083q.088-.517.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1z" />
+                                        <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 6 6 0 0 1 3.13-1.567" />
+                                    </svg>
+                                    <span class="fw-bold">
+                                        Salary:
+
+                                    </span>
+                                    <span id="preview-salary-big"></span> <span>&#8361;</span> / <span
+                                        id="preview-payment-type-big"></span>
+
+                                    <div id="preview-negotiable">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                            <path
+                                                d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                                        </svg>
+                                        negotiable
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-people-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                                    </svg>
+                                    <span class="fw-bold">
+                                        Students:
+                                    </span>
+                                    <span class='text-danger' id="preview-no-student">missing student</span>
+                                    <span id="preview-kind-student">&#8226; Kindergraden</span>
+                                    <span id="preview-elem-student">&#8226; Elementary</span>
+                                    <span id="preview-midl-student">&#8226; Middle School</span>
+                                    <span id="preview-high-student">&#8226; High School</span>
+                                    <span id="preview-univ-student">&#8226; University</span>
+                                    <span id="preview-adlt-student">&#8226; Adult</span>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item">
+                                <div>
+                                    <div id="preview-default-schedule-visibility">
+
+                                        <!--Monday to Friday-->
+                                        <div>
+                                            <span class="fw-bold">Monday to Friday: </span>
+                                            <span id="preview-everyday_start_time"></span>
+                                            <span> to </span>
+                                            <span id="preview-everyday_end_time"></span>
+                                        </div>
+
+                                        <!--Custom Schedule-->
+                                        <hr class="col-6 col-md-6 mb-6">
+                                        <table class="table-responsive table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <td>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
+                                                            <path
+                                                                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
+                                                        </svg>
+                                                    </td>
+                                                    <td>Mon</td>
+                                                    <td>Tue</td>
+                                                    <td>Wed</td>
+                                                    <td>Thu</td>
+                                                    <td>Fri</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>start</td>
+                                                    <td class="work-start-time" colspan="7">
+                                                        <span id="preview-everyday_start_time-td"></span>
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>end</td>
+                                                    <td class="work-end-time" colspan="7">
+                                                        <span id="preview-everyday_end_time-td"></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table><!--END Monday to Friday-->
+                                        <hr class="col-6 col-md-6 mb-6">
+                                    </div>
+
+                                    
+
+
+                                    <!-- Custom work schedule-->
+                                    <div id="preview-custom-schedule-visibility">
+
+                                        <!--CUSTOM SCHEDULE Rows-->
+                                        <!-- Monday Schedule -->
+                                        <div id="preview-monday-schedule-row">
+                                            <span class="me-4 fw-bold">Monday:</span>
+                                            <span id="preview-monday-start-time"></span>
+                                            <span>to</span>
+                                            <span id="preview-monday-end-time"></span>
+                                        </div>
+                                        <!-- Tuesday Schedule -->
+                                        <div id="preview-tuesday-schedule-row">
+                                            <span class="me-4 fw-bold">Tuesday:</span>
+                                            <span id="preview-tuesday-start-time"></span>
+                                            <span>to</span>
+                                            <span id="preview-tuesday-end-time"></span>
+                                        </div>
+                                        
+                                        <!-- Wednesday Schedule -->
+                                        <div id="preview-wednesday-schedule-row">
+                                            <span class="fw-bold">Wednesday:</span>
+                                            <span id="preview-wednesday-start-time"></span>
+                                            <span>to</span>
+                                            <span id="preview-wednesday-end-time"></span>
+                                        </div>
+                                        
+                                        <!-- Thursday Schedule -->
+                                        <div id="preview-thursday-schedule-row">
+                                            <span class="me-3 fw-bold">Thursday:</span>
+                                            <span id="preview-thursday-start-time"></span>
+                                            <span>to</span>
+                                            <span id="preview-thursday-end-time"></span>
+                                        </div>
+                                        
+                                        <!-- Friday Schedule -->
+                                        <div id="preview-friday-schedule-row">
+                                            <span class="me-5 fw-bold">Friday:</span>
+                                            <span id="preview-friday-start-time"></span>
+                                            <span>to</span>
+                                            <span id="preview-friday-end-time"></span>
+                                        </div>
+                                        
+                                        <!-- Saturday Schedule -->
+                                        <div id="preview-saturday-schedule-row">
+                                            <span class="me-4 fw-bold">Saturday:</span>
+                                            <span id="preview-saturday-start-time"></span>
+                                            <span>to</span>
+                                            <span id="preview-saturday-end-time"></span>
+                                        </div>
+                                        
+                                        <!-- Sunday Schedule -->
+                                        <div id="preview-sunday-schedule-row">
+                                            <span class="me-4 fw-bold">Sunday:</span>
+                                            <span id="preview-sunday-start-time"></span>
+                                            <span>to</span>
+                                            <span id="preview-sunday-end-time"></span>
+                                        </div>
+                                        
+
+                                        <!--Custom SCHEDULE TABLE -->
+                                        <hr class="col-6 col-md-6 mb-6">
+                                        <table class="table-responsive table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <td>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
+                                                            <path
+                                                                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
+                                                        </svg>
+                                                    </td>
+                                                    <td class="text-center" id="monday-td-title">Mon</td>
+                                                    <td class="text-center" id="tuesday-td-title">Tue</td>
+                                                    <td class="text-center" id="wednesday-td-title">Wed</td>
+                                                    <td class="text-center" id="thursday-td-title">Thu</td>
+                                                    <td class="text-center" id="friday-td-title">Fri</td>
+                                                    <td class="text-center" id="saturday-td-title">Sat</td>
+                                                    <td class="text-center" id="sunday-td-title">Sun</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Start</td>
+                                                    <td id="monday-td-start"></td>
+                                                    <td id="tuesday-td-start"></td>
+                                                    <td id="wednesday-td-start"></td>
+                                                    <td id="thursday-td-start"></td>
+                                                    <td id="friday-td-start"></td>
+                                                    <td id="saturday-td-start"></td>
+                                                    <td id="sunday-td-start"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>End</td>
+                                                    <td class="work-end-time" id="monday-td-end"></td>
+                                                    <td class="work-end-time" id="tuesday-td-end"></td>
+                                                    <td class="work-end-time" id="wednesday-td-end"></td>
+                                                    <td class="work-end-time" id="thursday-td-end"></td>
+                                                    <td class="work-end-time" id="friday-td-end"></td>
+                                                    <td class="work-end-time" id="saturday-td-end"></td>
+                                                    <td class="work-end-time" id="sunday-td-end"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table><!--END Custom work schedule-->
+                                        <hr class="col-6 col-md-6 mb-6">
+                                    </div>
+
+                                    <!-- No schedule provided-->
+                                    <div id="preview-unspecified-schedule-div" style="visibility: none;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock"
+                                            viewBox="0 0 16 16">
+                                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
+                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
+                                        </svg>
+                                        <span class="text-danger">Unspecified</span>
+                                    </div>
+
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 fw-normal text-start" id="benefitsPresentVisiblity">
+                        <span class="fs-4">work benefits</span>
+                        <ul class="list-group list-group-flush mt-4">
+
+                            <li class="list-group-item" id="preview-airfare">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-airplane" viewBox="0 0 16 16">
+                                        <path
+                                            d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849m.894.448C7.111 2.02 7 2.569 7 3v4a.5.5 0 0 1-.276.447l-5.448 2.724a.5.5 0 0 0-.276.447v.792l5.418-.903a.5.5 0 0 1 .575.41l.5 3a.5.5 0 0 1-.14.437L6.708 15h2.586l-.647-.646a.5.5 0 0 1-.14-.436l.5-3a.5.5 0 0 1 .576-.411L15 11.41v-.792a.5.5 0 0 0-.276-.447L9.276 7.447A.5.5 0 0 1 9 7V3c0-.432-.11-.979-.322-1.401C8.458 1.159 8.213 1 8 1s-.458.158-.678.599" />
+                                    </svg>
+                                    Airfare reinbursement
+                                </div>
+                            </li>
+
+                            <li class="list-group-item" id="preview-healthInsurance">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-heart-pulse" viewBox="0 0 16 16">
+                                        <path
+                                            d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053.918 3.995.78 5.323 1.508 7H.43c-2.128-5.697 4.165-8.83 7.394-5.857q.09.083.176.171a3 3 0 0 1 .176-.17c3.23-2.974 9.522.159 7.394 5.856h-1.078c.728-1.677.59-3.005.108-3.947C13.486.878 10.4.28 8.717 2.01zM2.212 10h1.315C4.593 11.183 6.05 12.458 8 13.795c1.949-1.337 3.407-2.612 4.473-3.795h1.315c-1.265 1.566-3.14 3.25-5.788 5-2.648-1.75-4.523-3.434-5.788-5" />
+                                        <path
+                                            d="M10.464 3.314a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.5a.5.5 0 0 0 0 1H4a.5.5 0 0 0 .416-.223l1.473-2.209 1.647 4.118a.5.5 0 0 0 .945-.049l1.598-5.593 1.457 3.642A.5.5 0 0 0 12 9h3.5a.5.5 0 0 0 0-1h-3.162z" />
+                                    </svg>
+                                    Health insurance
+                                </div>
+                            </li>
+
+                            <li class="list-group-item" id="preview-pension">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-bank" viewBox="0 0 16 16">
+                                        <path
+                                            d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z" />
+                                    </svg>
+                                    Pension contribution
+                                </div>
+                            </li>
+
+                            <li class="list-group-item" id="preview-vacationDaysField">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-emoji-smile" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                        <path
+                                            d="M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5m4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5" />
+                                    </svg>
+                                    <span id="preview-vacationDaysField-int"></span>
+                                    vacation days
+                                </div>
+                            </li>
+
+                            <li class="list-group-item" id="preview-severance">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-coin" viewBox="0 0 16 16">
+                                        <path
+                                            d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                        <path
+                                            d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
+                                    </svg>
+                                    Yearly severance
+                                </div>
+                            </li>
+
+                            <li class="list-group-item" id="preview-housing">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-house" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+                                    </svg>
+                                    Housing provided
+                                </div>
+                            </li>
+
+                            <li class="list-group-item" id="preview-housingAllowanceField">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-house-add" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h4a.5.5 0 1 0 0-1h-4a.5.5 0 0 1-.5-.5V7.207l5-5 6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z" />
+                                        <path
+                                            d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 1 0 1 0v-1h1a.5.5 0 1 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
+                                    </svg>
+                                    Housing allowance:
+                                    <span id="preview-housingAllowanceField-int"></span>
+                                    <span>&#8361;</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row g-5">
+
+                    <div class="col-md-12 fw-normal">
+                        <div class="accordion accordion-flush" id="jobpost_description-preview">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne-preview" aria-expanded="false"
+                                        aria-controls="flush-collapseOne-preview">
+                                        <span class="fs-5 text-primary">
+                                            View work description
+                                        </span>
+                                    </button>
+                                </h2>
+
+                                <div id="flush-collapseOne-preview" class="accordion-collapse collapse text-start"
+                                    aria-labelledby="flush-headingOne" data-bs-parent="#jobpost_description-preview"
+                                    style="word-wrap: break-word;">
+                                    <span id="preview-description"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--Preview of Big Job Post END-->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

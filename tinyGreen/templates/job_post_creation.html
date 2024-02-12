@@ -1,0 +1,788 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+Job Post
+{% endblock %}
+
+{% block scripts %}
+<script>
+    //This Script disables and changes the schedule style and resets values depending on if it is checked or not
+    function toggleColumnClass(checkbox) {
+        var columnIndex = checkbox.parentElement.parentElement.cellIndex; // Get column index
+        var table = checkbox.closest('table');
+
+        for (var i = 0; i < table.rows.length; i++) {
+            var td = table.rows[i].cells[columnIndex];
+
+            // Toggle the table-secondary class
+            if (checkbox.checked) {
+                td.classList.remove("table-secondary");
+            } else {
+                td.classList.add("table-secondary");
+                // Clear the value of input elements inside the td
+                var inputs = td.querySelectorAll("input[type='time']");
+                inputs.forEach(function(input) {
+                    input.value = ""; // Reset the value
+                });
+            }
+
+            // Disable/enable input elements inside the td
+            var inputs = td.querySelectorAll("input[type='time']");
+            inputs.forEach(function(input) {
+                input.disabled = !checkbox.checked;
+            });
+        }
+    }
+</script>
+
+<script>
+    //this is a support script to make unchecked boxes return false
+    function isChecked(checkboxId) {
+        var checkbox = document.getElementById(checkboxId);
+        return checkbox ? checkbox.checked : false;
+    }
+
+    //this is a support function that gives the time in 12h format
+    function formatTime(time) {
+        // catch empty strings
+        if(time === ''){return false;}
+        // Parse the time string
+        var timeArray = time.split(':');
+        var hours = parseInt(timeArray[0]);
+        var minutes = parseInt(timeArray[1]);
+    
+        // Convert to 12-hour format
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Handle midnight (0 hours)
+    
+        // Pad single digit hours and minutes with leading zeros
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+    
+        // Return the formatted time string
+        return hours + ':' + minutes + ' ' + ampm;
+    }
+
+
+
+     // Function to set visibility for a specific day
+    function setDayVisibility(daySchedule, previewScheduleId, previewScheduleIdRow, previewScheduleIdStart, previewScheduleIdEnd, dayStartTime, dayEndTime) {
+        if (daySchedule) {
+            document.getElementById(previewScheduleId).style.display = 'inline-block';
+            document.getElementById(previewScheduleIdRow).style.display = 'inline-block';
+            document.getElementById(previewScheduleIdStart).textContent = dayStartTime;
+            document.getElementById(previewScheduleIdEnd).textContent = dayEndTime;
+        } else {
+            document.getElementById(previewScheduleId).style.display = 'none';
+            document.getElementById(previewScheduleIdRow).style.display = 'none';
+        }
+    }
+
+    function setCustomScheduleVisibility(daySchdule,day,dayStart,dayEnd){
+        if(daySchdule){
+            document.getElementById(day+'-td-title').style.display = 'inline-block';
+            document.getElementById(day+'-td-start').style.display = 'inline-block';
+            document.getElementById(day+'-td-end').style.display = 'inline-block';
+            document.getElementById(day+'-td-start').textContent = dayStart;
+            document.getElementById(day+'-td-end').textContent = dayEnd;
+
+
+        }else{
+            document.getElementById(day+'-td-title').style.display = 'none';
+            document.getElementById(day+'-td-start').style.display = 'none';
+            document.getElementById(day+'-td-end').style.display = 'none';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+        
+    // this script sets up all the variables for the preview modal , js rendered client-side
+    document.getElementById('previewBtn').addEventListener('click', function() {
+        
+        // Necessary form data (optional = false)
+        // BASIC INFORMATION
+        var jobTitleElement = document.getElementById('job-title').value;
+        var jobTitle = jobTitleElement ? jobTitleElement : 'missing title'; //check if not null
+
+        var jobType = document.getElementById('job-type').value; //default: Full-time
+        var jobLocation = document.getElementById('job-location').value; //default: Seoul
+
+        var jobLocationDetailsElement = document.getElementById('job-details').value;
+        var jobLocationDetails = jobLocationDetailsElement ? jobLocationDetailsElement : 'missing location details'; //check if not null
+        
+        var jobSalaryElement = document.getElementById('job-salary').value;
+        var jobSalary = jobSalaryElement ? parseFloat(jobSalaryElement).toLocaleString('en-US') : 'missing salary'; //check if not null
+
+        var jobPaymentType = document.getElementById('job-payment-type').value; //default: Monthly
+        
+        var jobNegotiable = isChecked('job-negotiable'); // default: false
+        var jobNegotiableVisibility = jobNegotiable ? 'inline-block' : 'none'; 
+        
+        // job start date
+        var jobStartDateElement = document.getElementById('job-startdate').value;
+        var startDate = new Date(jobStartDateElement);
+        var formattedDate = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        var jobStartDate = formattedDate !== 'Invalid Date' ? formattedDate: 'missing date'; 
+
+        var jobAsapElement = isChecked('job-asap');
+        var jobAsapVisibility = jobAsapElement ? 'inline-block' : 'none'; 
+        var asapBadgeSPElement = document.getElementById('asap-badge-small-preview');
+        asapBadgeSPElement.style.display = jobAsapVisibility;
+        var asapBadgeBPElement = document.getElementById('asap-badge-big-preview');
+        asapBadgeBPElement.style.display = jobAsapVisibility;
+        
+        // Optional form Data (optional = true) //default false
+        // STUDENT TYPES
+        var kindStudent = isChecked('kind_student');
+        var kindStudentVisibility = kindStudent ? 'inline-block' : 'none'; 
+        document.getElementById('preview-kind-student').style.display = kindStudentVisibility;
+        
+        var elemStudent = isChecked('elem_student');
+        var elemStudentVisibility = elemStudent ? 'inline-block' : 'none'; 
+        document.getElementById('preview-elem-student').style.display = elemStudentVisibility;
+
+        var midlStudent = isChecked('midl_student');
+        var midlStudentVisibility = midlStudent ? 'inline-block' : 'none'; 
+        document.getElementById('preview-midl-student').style.display = midlStudentVisibility;
+
+        var highStudent = isChecked('high_student');
+        var highStudentVisibility = highStudent ? 'inline-block' : 'none'; 
+        document.getElementById('preview-high-student').style.display = highStudentVisibility;
+
+        var univStudent = isChecked('univ_student');
+        var univStudentVisibility = univStudent ? 'inline-block' : 'none'; 
+        document.getElementById('preview-univ-student').style.display = univStudentVisibility;
+
+        var adltStudent = isChecked('adlt_student');
+        var adltStudentVisibility = adltStudent ? 'inline-block' : 'none'; 
+        document.getElementById('preview-adlt-student').style.display = adltStudentVisibility;
+
+        //no student
+        var noStudent = kindStudent || elemStudent || midlStudent || highStudent || univStudent || adltStudent;
+        var noStudentVisbility =  noStudent ? 'none': 'inline-block' ;
+        document.getElementById('preview-no-student').style.display = noStudentVisbility;
+
+
+        // BENEFITS
+        var healthInsurance = isChecked('health_insurance');
+        var healthInsuranceVisibility = healthInsurance ? 'inline-block' : 'none'; 
+        document.getElementById('preview-healthInsurance').style.display = healthInsuranceVisibility;
+
+        var pension = isChecked('pension');
+        var pensionVisibility = pension ? 'inline-block' : 'none'; 
+        document.getElementById('preview-pension').style.display = pensionVisibility;
+
+        var airfare = isChecked('airfare');
+        var airfareVisibility = airfare ? 'inline-block' : 'none'; 
+        document.getElementById('preview-airfare').style.display = airfareVisibility;
+
+        var severance = isChecked('severance');
+        var severanceVisibility = severance ? 'inline-block' : 'none'; 
+        document.getElementById('preview-severance').style.display = severanceVisibility;
+
+        var housing = isChecked('housing');
+        var housingVisibility = housing ? 'inline-block' : 'none'; 
+        document.getElementById('preview-housing').style.display = housingVisibility;
+
+        var housingAllowanceFieldElement = document.getElementById("housingAllowanceField").value;
+        var housingAllowanceField = housingAllowanceFieldElement !== '' ? parseFloat(housingAllowanceFieldElement).toLocaleString('en-US') : false;
+        var housingAllowanceFieldVisibility = housingAllowanceField === false ? 'none': 'inline-block';
+        document.getElementById('preview-housingAllowanceField').style.display = housingAllowanceFieldVisibility;
+        document.getElementById('preview-housingAllowanceField-int').textContent = housingAllowanceField;
+
+        var vacationDaysFieldElement = document.getElementById('vacationDaysField').value;
+        var vacationDaysField = vacationDaysFieldElement !=='' ? vacationDaysFieldElement : false;
+        var vacationDaysFieldVisibility = vacationDaysField === false ? 'none': 'inline-block';
+        document.getElementById('preview-vacationDaysField').style.display = vacationDaysFieldVisibility;
+        document.getElementById('preview-vacationDaysField-int').textContent =vacationDaysField;
+
+        var benefitsPresent = healthInsurance || pension || airfare || severance || housing || housingAllowanceField || vacationDaysField ;
+        var benefitsPresentVisiblity = benefitsPresent === false ? 'none': 'inline-block';
+        document.getElementById('benefitsPresentVisiblity').style.display = benefitsPresentVisiblity;
+
+        
+        // job Description
+        var jobDescriptionElement = document.getElementById('job-description').value;
+        var jobDescription = jobDescriptionElement ? jobDescriptionElement : 'Missing a job description';
+        // Update modal description
+        document.getElementById('preview-description').textContent = jobDescription;
+        
+        
+        // Update modal content for Necessary form data (optional = false)
+        // MODAL STYLING OF NECCESARY DATA
+        document.getElementById('preview-title').textContent = jobTitle;
+        document.getElementById('preview-title-big').textContent = jobTitle;
+        
+        if (jobTitle === 'missing title') {
+            document.getElementById('preview-title').classList.add('text-danger'); // Add the 'text-danger' class
+            document.getElementById('preview-title-big').classList.add('text-danger'); // Add the 'text-danger' class
+        }else{
+            document.getElementById('preview-title').classList.remove('text-danger'); // Add the 'text-danger' class
+            document.getElementById('preview-title-big').classList.remove('text-danger'); // Add the 'text-danger' class
+        }
+        
+        document.getElementById('preview-type').textContent = jobType;
+        document.getElementById('preview-type-big').textContent = jobType;
+
+        document.getElementById('preview-location').textContent = jobLocation;
+        document.getElementById('preview-location-big').textContent = jobLocation;
+
+        document.getElementById('preview-location-details').textContent = jobLocationDetails;
+        if (jobLocationDetails === 'missing location details') {
+            document.getElementById('preview-location-details').classList.add('text-danger'); // Add the 'text-danger' class
+        }else{
+            document.getElementById('preview-location-details').classList.remove('text-danger'); // Add the 'text-danger' class
+        }
+        
+        document.getElementById('preview-salary').textContent = jobSalary;
+        document.getElementById('preview-salary-big').textContent = jobSalary;
+        if (jobSalary === 'missing salary') {
+            document.getElementById('preview-salary').classList.add('text-danger'); // Add the 'text-danger' class
+            document.getElementById('preview-salary-big').classList.add('text-danger'); // Add the 'text-danger' class
+        }else{
+            document.getElementById('preview-salary').classList.remove('text-danger'); // Add the 'text-danger' class
+            document.getElementById('preview-salary-big').classList.remove('text-danger'); // Add the 'text-danger' class
+        }
+        
+        document.getElementById('preview-payment-type').textContent = jobPaymentType;
+        document.getElementById('preview-payment-type-big').textContent = jobPaymentType;
+        
+        var jobNegotiableElment = document.getElementById('preview-negotiable');
+        jobNegotiableElment.style.display = jobNegotiableVisibility;
+        
+        // job start Date
+        if (jobStartDate !== 'missing date') {
+            var date = new Date(jobStartDate); // Parse the date string
+            var options = { month: 'short', day: '2-digit' }; // Define options for formatting
+            var jobStartDate_formattedDate = date.toLocaleDateString('en-US', options); // Format the date
+            document.getElementById('preview-startdate').textContent = jobStartDate_formattedDate; // Update the element
+            document.getElementById('preview-startdate').classList.remove('text-danger'); // Add the 'text-danger' class
+            
+            document.getElementById('preview-startdate-big').textContent = jobStartDate_formattedDate; // Update the element
+            document.getElementById('preview-startdate-big').classList.remove('text-danger'); // Add the 'text-danger' class
+        } else {
+            document.getElementById('preview-startdate').textContent = jobStartDate; // Update the element with 'missing'
+            document.getElementById('preview-startdate').classList.add('text-danger'); // Add the 'text-danger' class
+            
+            document.getElementById('preview-startdate-big').textContent = jobStartDate; // Update the element with 'missing'
+            document.getElementById('preview-startdate-big').classList.add('text-danger'); // Add the 'text-danger' class
+        }
+        
+        // WORK SCHEDULES 
+
+        // default schedule (monday to friday)
+        var everydayStartTimeElement = document.getElementById('everyday_start_time').value;
+        var everydayStartTime = formatTime(everydayStartTimeElement);
+        
+        var everydayEndTimeElement = document.getElementById('everyday_end_time').value;
+        var everydayEndTime = formatTime(everydayEndTimeElement);
+        
+        // IF default schedule being used
+        // update modals visbility
+        var defaultSchedule = everydayStartTime !== false && everydayEndTime !== false;
+        var defaultScheduleVisibility = defaultSchedule ? 'inline-block' : 'none';
+        document.getElementById('preview-default-schedule').style.display = defaultScheduleVisibility;
+        document.getElementById('preview-default-schedule-visibility').style.display = defaultScheduleVisibility;
+
+        document.getElementById('preview-everyday_start_time').textContent = everydayStartTime;
+        document.getElementById('preview-everyday_start_time-td').textContent = everydayStartTime;
+        document.getElementById('preview-everyday_end_time').textContent = everydayEndTime;
+        document.getElementById('preview-everyday_end_time-td').textContent = everydayEndTime;
+        
+        
+        // Custom (start times)
+        // setting variables with data from FORM
+        var mondayStartTimeElement = document.getElementById('monday_start_time').value;
+        var mondayStartTime = formatTime(mondayStartTimeElement);
+        
+        var tuesdayStartTimeElement = document.getElementById('tuesday_start_time').value;
+        var tuesdayStartTime = formatTime(tuesdayStartTimeElement);
+        
+        var wednesdayStartTimeElement = document.getElementById('wednesday_start_time').value;
+        var wednesdayStartTime = formatTime(wednesdayStartTimeElement);
+        
+        var thursdayStartTimeElement = document.getElementById('thursday_start_time').value;
+        var thursdayStartTime = formatTime(thursdayStartTimeElement);
+        
+        var fridayStartTimeElement = document.getElementById('friday_start_time').value;
+        var fridayStartTime = formatTime(fridayStartTimeElement);
+        
+        var saturdayStartTimeElement = document.getElementById('saturday_start_time').value;
+        var saturdayStartTime = formatTime(saturdayStartTimeElement);
+        
+        var sundayStartTimeElement = document.getElementById('sunday_start_time').value;
+        var sundayStartTime = formatTime(sundayStartTimeElement);
+        
+        // Custom (end times)
+        var mondayEndTimeElement = document.getElementById('monday_end_time').value;
+        var mondayEndTime = formatTime(mondayEndTimeElement);
+        
+        var tuesdayEndTimeElement = document.getElementById('tuesday_end_time').value;
+        var tuesdayEndTime = formatTime(tuesdayEndTimeElement);
+        
+        var wednesdayEndTimeElement = document.getElementById('wednesday_end_time').value;
+        var wednesdayEndTime = formatTime(wednesdayEndTimeElement);
+        
+        var thursdayEndTimeElement = document.getElementById('thursday_end_time').value;
+        var thursdayEndTime = formatTime(thursdayEndTimeElement);
+        
+        var fridayEndTimeElement = document.getElementById('friday_end_time').value;
+        var fridayEndTime = formatTime(fridayEndTimeElement);
+        
+        var saturdayEndTimeElement = document.getElementById('saturday_end_time').value;
+        var saturdayEndTime = formatTime(saturdayEndTimeElement);
+        
+        var sundayEndTimeElement = document.getElementById('sunday_end_time').value;
+        var sundayEndTime = formatTime(sundayEndTimeElement);
+        
+        // Custom Day schedules 
+        // Check if a day is active (has both START && END)
+        var mondaySchedule= mondayStartTime !== false && mondayEndTime !== false;
+        var tuesdaySchedule= tuesdayStartTime !== false && tuesdayEndTime !== false;
+        var wednesdaySchedule= wednesdayStartTime !== false && wednesdayEndTime !== false;
+        var thursdaySchedule= thursdayStartTime !== false && thursdayEndTime !== false;
+        var fridaySchedule= fridayStartTime !== false && fridayEndTime !== false;
+        var saturdaySchedule= saturdayStartTime !== false && saturdayEndTime !== false;
+        var sundaySchedule= sundayStartTime !== false && sundayEndTime !== false;
+
+
+        // Set Day schedulde VISIBILITY
+        setDayVisibility(mondaySchedule,'preview-monday-schedule','preview-monday-schedule-row','preview-monday-start-time','preview-monday-end-time',mondayStartTime,mondayEndTime);
+        setDayVisibility(tuesdaySchedule, 'preview-tuesday-schedule', 'preview-tuesday-schedule-row', 'preview-tuesday-start-time', 'preview-tuesday-end-time', tuesdayStartTime, tuesdayEndTime);
+        setDayVisibility(wednesdaySchedule, 'preview-wednesday-schedule', 'preview-wednesday-schedule-row', 'preview-wednesday-start-time', 'preview-wednesday-end-time', wednesdayStartTime, wednesdayEndTime);
+        setDayVisibility(thursdaySchedule, 'preview-thursday-schedule', 'preview-thursday-schedule-row', 'preview-thursday-start-time', 'preview-thursday-end-time', thursdayStartTime, thursdayEndTime);
+        setDayVisibility(fridaySchedule, 'preview-friday-schedule', 'preview-friday-schedule-row', 'preview-friday-start-time', 'preview-friday-end-time', fridayStartTime, fridayEndTime);
+        setDayVisibility(saturdaySchedule, 'preview-saturday-schedule', 'preview-saturday-schedule-row', 'preview-saturday-start-time', 'preview-saturday-end-time', saturdayStartTime, saturdayEndTime);
+        setDayVisibility(sundaySchedule, 'preview-sunday-schedule', 'preview-sunday-schedule-row', 'preview-sunday-start-time', 'preview-sunday-end-time', sundayStartTime, sundayEndTime);
+        
+        setCustomScheduleVisibility(mondaySchedule,'monday',mondayStartTime,mondayEndTime);
+        setCustomScheduleVisibility(tuesdaySchedule, 'tuesday', tuesdayStartTime, tuesdayEndTime);
+        setCustomScheduleVisibility(wednesdaySchedule, 'wednesday', wednesdayStartTime, wednesdayEndTime);
+        setCustomScheduleVisibility(thursdaySchedule, 'thursday', thursdayStartTime, thursdayEndTime);
+        setCustomScheduleVisibility(fridaySchedule, 'friday', fridayStartTime, fridayEndTime);
+        setCustomScheduleVisibility(saturdaySchedule, 'saturday', saturdayStartTime, saturdayEndTime);
+        setCustomScheduleVisibility(sundaySchedule, 'sunday', sundayStartTime, sundayEndTime);
+
+        // IF custom schedule being used
+        // update modals visbility
+        var customSchedulePresent = mondaySchedule||tuesdaySchedule||wednesdaySchedule||thursdaySchedule||fridaySchedule||saturdaySchedule||sundaySchedule;
+        var customSchedulePresentVisibility = customSchedulePresent ? 'inline-block' : 'none';
+        document.getElementById('preview-custom-schedule-visibility').style.display = customSchedulePresentVisibility;
+        
+        // unspecified schedule
+        var unspecifiedSchedule = defaultSchedule || customSchedulePresent;
+        console.log(unspecifiedSchedule);
+        var unspecifiedScheduleVisibility = unspecifiedSchedule? 'none': 'inline-block';
+        document.getElementById('preview-unspecified-schedule').style.display = unspecifiedScheduleVisibility;
+        document.getElementById('preview-unspecified-schedule-div').style.display = unspecifiedScheduleVisibility;
+    });
+});
+
+
+</script>
+
+<script>
+   function resetForm() {
+        // Reset values for everyday start and end time
+        document.getElementById('everyday_start_time').value = '';
+        document.getElementById('everyday_end_time').value = '';
+
+        // Reset values for custom working days
+        var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        for (var i = 0; i < days.length; i++) {
+            var day = days[i];
+
+            // Reset start time
+            document.getElementById(day + '_start_time').value = '';
+
+            // Reset end time
+            document.getElementById(day + '_end_time').value = '';
+
+            // Reset checkbox to checked
+            var checkbox = document.getElementById('flexCheck' + day);
+            checkbox.checked = true;
+
+            // Remove "table-secondary" class
+            var columnIndex = checkbox.parentElement.parentElement.cellIndex;
+            var table = checkbox.closest('table');
+
+            for (var j = 0; j < table.rows.length; j++) {
+                var td = table.rows[j].cells[columnIndex];
+                td.classList.remove("table-secondary");
+            }
+
+            // Enable the start input
+            var inputStartElement = document.getElementById(day + '_start_time');
+            inputStartElement.removeAttribute("disabled");
+
+            // Enable the end input
+            var inputEndElement = document.getElementById(day + '_end_time');
+            inputEndElement.removeAttribute("disabled");
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var housingCheckbox = document.getElementById("housingCheckbox");
+        var housingAllowanceField = document.getElementById("housingAllowanceField");
+
+        housingCheckbox.addEventListener("change", function () {
+            // Enable or disable the housing allowance field based on the checkbox state
+            housingAllowanceField.disabled = !housingCheckbox.checked;
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get references to the checkbox and the vacation days field
+        var vacationCheckbox = document.getElementById("vacationCheckbox");
+        var vacationDaysField = document.getElementById("vacationDaysField");
+
+        // Add an event listener to the checkbox
+        vacationCheckbox.addEventListener("change", function () {
+            // Enable or disable the vacation days field based on the checkbox state
+            vacationDaysField.disabled = !vacationCheckbox.checked;
+        });
+    });
+</script>
+
+<script>
+    function updateCharacterCount(textarea) {
+        var maxLength = 1000;
+        var currentLength = textarea.value.length;
+        var remainingCharacters = maxLength - currentLength;
+        var characterCountElement = document.getElementById('characterCount');
+        characterCountElement.textContent = remainingCharacters + ' characters remaining';
+    }
+
+    // Initialize character count on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        var textarea = document.querySelector('[name="description"]');
+        if (textarea) {
+            updateCharacterCount(textarea);
+        }
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!--class overflow-hidden [can be added]-->
+<div class="position-relative p-3 p-md-5 m-md-3 text-center">
+    <div class="container">
+
+        <h1 class="display-2">Create a Job Post</h1>
+
+        <hr>
+        <p class="lead font-weight-normal">Fill in the text to create a job posting</p>
+        
+        <!-- <div class="horizontal-timeline">
+            <ul class="timeline-steps">
+              <li class="step active">
+                <span tabindex="0" class="circle" aria-label="account">1</span>
+                <div class="label">account</div>
+              </li>
+              <li class="step">
+                <span tabindex="0" class="circle" aria-label="experience">2</span>
+                <div class="label">experience</div>
+              </li>
+              <li class="step">
+                <span tabindex="0" class="circle" aria-label="resume">3</span>
+                <div class="label">resume</div>
+              </li>
+            </ul>
+          </div> -->
+          
+
+        <form method="POST" class="mx-auto" style="max-width: 700px;">
+
+            {{ form.hidden_tag() }} <!--protect CSRF -->
+            <div class="border p-3 mb-3">
+                <h1 class="h3 mb-3 fw-normal">Basic work information</h1>
+                <hr>
+                <!-- Title of Post-->
+                <div class="mb-3 input-group">
+                {{ form.title.label(class="input-group-text") }}
+                {{ form.title(id="job-title",class="form-control", list="TitleExamples",
+                placeholder="Teachers will see this as the title of your post.") }}
+                <datalist id="TitleExamples">
+                    <option value="Full-time native teacher for new school in Seoul">
+                    <option value="Exciting opportunity! Part-time for F-Visa teachers">
+                    <option value="Substitute Teacher needed this week – URGENT">
+                    <option value="Fun Summer camp teacher for 2 weeks">
+                </datalist>
+                </div>
+
+                <!--Job type-->
+                <div class="mb-3 input-group">
+                    {{ form.job_type.label(class="input-group-text") }}
+                    {{ form.job_type(id="job-type",class="form-control",placeholder="Where is the Job Located?")}}
+                </div>
+
+                <!--Location-->
+                <div class="mb-3 input-group">
+                    {{ form.location.label(class="input-group-text") }}
+                    {{ form.location(id="job-location", class="form-control",placeholder="Where is the Job Located?")}}
+                </div>
+                
+                <!-- location details-->
+                <div class="mb-3 input-group">
+                    {{ form.location_details.label(class="input-group-text") }}
+                    {{ form.location_details(id="job-details",class="form-control",list="locationDetailsExample",
+                    placeholder="Give more information about the location")}}
+                    <datalist id="locationDetailsExample">
+                        <option value="Only a 5 minutes walk away from Gangnam Station">
+                        <option value="Inside the Shinsegae Department Store">
+                        <option value="Near the N Seoul Tower">
+                        <option value="Address: 300 Olympic-ro, Songpa-gu, Seoul">
+                    </datalist>
+                </div>
+
+                <!-- Salary & negotiable-->
+                <div class="mb-3 input-group input-group">
+                    {{ form.salary.label(class="input-group-text") }}
+                    {{ form.salary(id="job-salary",class="form-control",placeholder="Salary") }}
+                    <label class="input-group-text"><span>&#8361;</span></label>
+                    {{ form.salary_payment_type(id="job-payment-type",class="form-control") }}
+
+                    <div class="input-group-text">
+                        {{ form.salary_negotiable(id="job-negotiable",class="form-check-input mt-0") }}
+                        <label class="form-check-label ms-2" for="salary-negotiable">negotiable</label>
+                    </div>
+                </div>
+
+                <!-- Start date & Urgency-->
+                <div class="mb-3 input-group">
+                    <!--Start Date-->
+                    {{ form.startdate.label(class="input-group-text") }}
+                    {{ form.startdate(id="job-startdate",class="form-control") }}
+                    <!-- ASAP toggle-->
+                    <div>
+                        <label class="btn btn-outline-primary align-center" for="{{ form.asap.id }}">
+                            <span>As soon as possible (ASAP)</span>
+                                {{ form.asap(id="job-asap",class="form-check-label small-checkbox") }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kind of Students-->
+            <div class="border p-3 mb-3">
+                <h1 class="h3 mb-3 fw-normal">Types of students</h1>
+                <hr>
+                <div class="container">
+                    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-3 mb-3 text-start">
+                        {% for field in [form.kind_student, form.elem_student, form.midl_student, form.high_student,
+                        form.univ_student, form.adlt_student] %}
+                        <div class="form-check col">
+                            {{ field(id=field.id, class="form-check-input") }}
+                            <label class="form-check-label" for="{{ field.id }}">
+                                {{ field.label.text }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benefits-->
+            <div class="border p-3 mb-3">
+                <h1 class="h3 mb-3 fw-normal ">Employee benefits</h1>
+                <hr>
+                <div class="container">
+                    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 mb-3 text-start">
+                        {% for field in [form.health_insurance, form.pension, form.airfare, form.severance, form.housing] %}
+                        <div class="form-check col">
+                            {{ field(id=field.id, class="form-check-input") }}
+                            <label class="form-check-label" for="{{ field.id }}">
+                                {{ field.label.text }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- housing allowance-->
+                <div class="mb-3 input-group">
+                    <div class="input-group-text">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="housingCheckbox">
+                            <label class="form-check-label" for="housingCheckbox">
+                                {{ form.housing_allowance.label.text}}</label>
+                        </div>
+                    </div>
+                    {{ form.housing_allowance(
+                        class="form-control",
+                         disabled="disabled",
+                          id="housingAllowanceField",
+                          maxlength=form.housing_allowance.render_kw.maxlength)
+                         }}
+                    <label class="input-group-text"><span>&#8361;</span></label>
+                </div>
+
+                <!-- vacation days-->
+                <div class="mb-3 input-group">
+                    <div class="input-group-text">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="vacationCheckbox">
+                            <label class="form-check-label" for="vacationCheckbox">
+                                {{ form.vacation_days.label.text}}</label>
+                        </div>
+                    </div>
+                    {{ form.vacation_days(class="form-control", disabled="disabled", id="vacationDaysField") }}
+                    <label class="input-group-text">days</label>
+                </div>
+            </div>
+
+            <!--Working Schedule-->
+            <div class="border p-3 mb-3">
+                <h1 class="h3 mb-3 fw-normal ">Working Hours</h1>
+                <span class="text-muted ms-2">
+                    If working hours are not provided, working hours will appear as `unspecified`
+                  </span>
+                <hr>
+                <!--NAV TABS working hours-->
+                <ul class="nav nav-tabs" id="myTabs">
+                    <li class="nav-item">
+                        <a class="nav-link text-center mb-4 active" id="tab1" data-bs-toggle="tab" href="#standardSchedule" onclick="resetForm()">
+                            Standard Working days
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-center mb-4" id="tab2" data-bs-toggle="tab" href="#customSchedule" onclick="resetForm()">Custom Working
+                            days</a>
+                    </li>
+                    <li class="ms-auto">
+                        <button type="button" class="btn btn-outline-warning" onclick="resetForm()">Reset Schedule</button>
+                    </li>
+                </ul>
+                <!-- working hours Scheduler-->
+                <div class="tab-content mt-2">
+                    <!-- Default Schedule-->
+                    <div class="tab-pane fade show active" id="standardSchedule">
+                        <table class="table table-borderless text-center table-responsive">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="h3 mb-3 fw-normal",scope="col">
+                                        Monday to Friday
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fs-4" style="border-radius: 10px; text-align: center; vertical-align: middle; color: #2d86df">Start</td>
+                                    <td>
+                                        {{ form.everyday_start_time(id="everyday_start_time", class="form-control",style="font-size: 1.5em;") }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fs-4" style="border-radius: 10px; text-align: center; vertical-align: middle; color: #14314f">End</td>
+                                    <td>
+                                        {{ form.everyday_end_time(id="everyday_end_time", class="form-control",style="font-size: 1.5em;") }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Custom Schedule-->
+                    <div class="tab-pane fade" id="customSchedule">
+                        <span class="h3 mb-3 pb-4 fw-normal">Custom Working days</span>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-borderless text-center">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        {% for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
+                                            <th scope="col">
+                                                <div class="text-center">
+                                                    {{ day.capitalize() }}
+                                                </div>
+                                                <div class="form-check d-flex justify-content-center align-items-center">
+                                                
+                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheck{{day}}" checked
+                                                        onchange="toggleColumnClass(this)">
+                                                </div>
+                                            </th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td class="fs-4" style="border-radius: 10px; text-align: center; vertical-align: middle; color: #2d86df">
+                                            Start
+                                        </td>
+                                        {% for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
+                                            <td>
+                                                {{ form[day + '_start_time'](id=day+"_start_time",class="form-control",style="font-size: 1.4em;") }}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        <td class="fs-4" style="border-radius: 10px; text-align: center; vertical-align: middle; color: #14314f">
+                                            End
+                                        </td>
+                                        {% for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
+                                            <td>
+                                                {{ form[day + '_end_time'](id=day+"_end_time",class="form-control",style="font-size: 1.4em;") }}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="border p-3 mb-3">
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        
+                            <span class="fs-5">Work description 
+                                <span class="text-muted">(optional)</span>
+                            </span>
+                        </button>
+                    </h2>
+
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                        <div class="input-group">
+                            {{form.description(id="job-description",class="form-control",style="height: 8rem",
+                            placeholder=
+"Write a description or additonal informaton to help the best candidates understand the work.
+For Example: Day-to-Day tasks, Requirements, Visa / Experience Preferences, Passion for teaching ...etc.",                            
+                            oninput="updateCharacterCount(this)") }}
+                          </div>
+                          <div id="characterCount" class="text-muted"></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+
+
+                
+                {% include 'includes/job_creation_preview_modals.html' %}
+                <button type="button" id="previewBtn" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#job_preview_modals">
+                    Preview Job
+                </button>
+
+                
+                {{ form.submit(class="btn btn-lg btn-green ms-3") }}
+            </div>
+
+        </form>
+    </div> <!--Container-->
+</div>
+
+
+
+{% endblock %}

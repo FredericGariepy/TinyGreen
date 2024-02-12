@@ -1,0 +1,32 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+Set up Recruiter Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
+    <div class="container">
+        
+        <h1 class="display-2">Create Recruiter Profile</h1>
+        <hr>
+        <p class="lead font-weight-normal">Get started</p>
+        
+            <form method="POST">
+                {{ form.hidden_tag() }} <!--protect CSRF -->
+                <div>
+                {{ form.contact_email_address.label() }}
+                <div id="emailHelp" class="form-text">This email address will be displayed on your job postings.</div>
+                {{ form.contact_email_address(class="form-control",placeholder="Your Recruiter contact email address") }}
+                </div>
+                
+                <div>
+                <br>
+                {{ form.submit(class="btn btn-lg btn-success") }}
+                </div>
+
+            </form>
+    </div>
+</div>
+
+{% endblock %}

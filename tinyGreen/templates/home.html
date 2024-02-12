@@ -1,0 +1,36 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
+    <div class="container">
+
+        <h1 class="display-2">Home page</h1>
+        <hr>
+        {% if current_user.is_authenticated == False %}
+        <h1 class="h3 mb-3 fw-normal">Get started</h1>
+        
+        
+        <div class="d-flex justify-content-center">
+            <div class=" mb-3 p-2 m-2">
+            <h1 class="h4 mb-3 fw-normal">Don't have an account?</h1>
+                <p class="lead font-weight-normal fst-italic">Make an account for free</p>
+                <a class="btn btn-info text-light" href="{{ url_for('register_page')}}">Register</a>
+            </div>
+            <div class=" mb-3 p-2 m-2">
+                <h1 class="h4 mb-3 fw-normal">Already have an account?</h1>
+                
+                <p class="lead font-weight-normal">Welcome back!</p>
+                <a class="btn btn-info text-light" href="{{ url_for('login_page')}}">Sign in</a>
+            </div>
+        </div>
+        
+        {%endif%}
+        
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+{{current_user.username}} Job Post
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <br>
+    <span class="display-5">Job Post: </span> 
+    <span class="display-6">{{ job_post.title }}</span>
+    
+    <hr>
+    <h2>List of Applicants ( {{ job_applicants|length }} )</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Applicant</th>
+                <th scope="col">@ Email</th>
+                <th scope="col">Visa</th>
+                <th scope="col">Native English</th>
+                <th scope="col">Years of experience</th>
+                <th scope="col">Date applied</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job_applicant, teacher_profile in job_applicants %}
+                <tr>
+                    <td>{{ teacher_profile.user.username }}</td>
+                    <td>{{ teacher_profile.contact_email_address}}
+                        <button class="btn btn-outline-success" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Email copied" onclick="copyToClipboard('{{ teacher_profile.contact_email_address }}')">
+                            
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                              </svg> Copy
+                        </button>
+                        
+                    </td>
+                    <td>{{ teacher_profile.visaType}}</td>
+                    <td>
+                        {% if teacher_profile.nativeEnglish == True %}
+                          <span style="color: green;">Yes</span>
+                        {% else %}
+                          <span style="color: red;">No</span>
+                        {% endif %}
+                    <td>{{ teacher_profile.yearsOfExperience}}</td>
+                    <td>{{ job_applicant.date_applied.strftime('%m / %d')}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl);
+            });
+        });
+
+        function copyToClipboard(text) {
+            var textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+    </script>
+{% endblock %}
+

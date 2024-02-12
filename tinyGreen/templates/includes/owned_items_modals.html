@@ -1,0 +1,58 @@
+<!-- Button trigger modal 
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+  -->
+  <style>
+    .modal-content{
+      color: rgb(30, 29, 29);
+
+    }
+  </style>
+  <!-- Selling Modal -->
+  <!--
+  <div class="modal fade" id="selling-info-modal-{{owned_item.id}}" tabindex="-1" aria-labelledby="selling Modal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content container">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{owned_item.name}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          {{owned_item.name}}: {{owned_item.description}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  -->
+
+<!-- Selling Modal -->
+  <div class="modal fade" id="selling-info-modal-{{owned_item.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content container">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{owned_item.name}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form method="POST">
+          {{ selling_form.hidden_tag() }} <!--protect CSRF -->
+          <div class="modal-body text-center">
+            Sell {{owned_item.name}} for ${{owned_item.price}}?
+          </div>
+          <h6 class="text-center">By clicking 'Sell Item' you will Sell {{owned_item.name}}</h6>
+          
+          <input id="sold_item" name="sold_item" type="hidden" value={{owned_item.name}}>
+          {{selling_form.submit(class="btn btn-danger btn-block")}}
+
+        </form>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>

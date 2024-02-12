@@ -1,0 +1,159 @@
+body{
+    background-color: #f9fafe;
+    color: #0e1821;
+}
+
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #e8ffe0;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgb(244, 249, 255), rgba(232, 255, 224, 1));
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+,C Safari 7+ */
+    background: linear-gradient(to right, rgb(244, 249, 255), rgb(232, 255, 224))
+  }
+
+.hover-over{
+    transition: background-color 0.3s ease; /* Transition effect */
+}
+
+.hover-over:hover {
+    background-color: #f2fff0; /* Background color on hover */
+}
+
+.job-card-link{
+    text-decoration: none;
+    color: #0e1821;
+}
+
+.search{
+    position: relative;
+    box-shadow: 0 0 40px rgba(51, 51, 51, .1);
+}
+
+.search input{
+    height: 60px;
+    border: 2px solid #d6d4d4;
+}
+
+.search input:focus{
+    box-shadow: none;
+    border: 2px solid blue;
+}
+
+.search .fa-search{
+    position: absolute;
+    top: 20px;
+    left: 16px;
+}
+
+.search button{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    height: 50px;
+    width: 110px;
+    background: blue;
+}
+
+.location-label{
+    text-align: center;
+}
+
+.btn-green {
+    background-color: #6dc77a;
+    border: 1px solid #6dc77a;
+    color: #fff;
+    box-shadow: 0 3px 7px rgb(109 199 122 / 50%);
+}
+
+.box-shadow-primary{
+    box-shadow: 0 3px 7px rgb(11 94 215 / 50%);
+}
+
+.list-group-item{
+    background-color: transparent;
+    border-top: transparent;
+    border: none;
+    }
+
+.work-start-time{
+    text-align: center;
+    
+}    
+.work-end-time{
+    text-align: center;
+
+    /* fallback for old browsers */
+    background: #e0fcff;
+      
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(bottom, rgb(244, 249, 255), rgba(244, 252, 255, 1));
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+,C Safari 7+ */
+    background: linear-gradient(bottom, rgb(244, 249, 255), rgb(244, 252, 255))
+
+}
+
+body{
+    
+    background-image: linear-gradient(120deg, #fFffff 0%, #ffffff 100%);
+    /*Credit: CSS Author Chris Smith January 30, 2019*/
+}
+
+.big-checkbox {
+    width: 30px;
+    height: 30px;
+}
+.mid-checkbox {
+    width: 20px;
+    height: 20px;
+}
+.small-checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+/*timeline css*/
+/* 
+.horizontal-timeline {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .timeline-steps {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    display: flex;
+  }
+  
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #999999;
+    color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .label {
+    text-align: center;
+  }
+  
+  .step.active .circle {
+    background-color: #007bff;
+  }
+  */
+  

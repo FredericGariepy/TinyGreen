@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--Note: current_user accesible from flask_login import login_user-->
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <title>
+    {% block title %}
+
+    {% endblock %}
+  </title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+  
+  <script>
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        console.warn('Developer shortcuts are blocked.');
+    });
+    
+    document.addEventListener('keydown', function(e) {
+      if (
+          // Developer Tools shortcuts
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I or Ctrl+Shift+J (Windows)
+          (e.metaKey && e.altKey && (e.keyCode === 73 || e.keyCode === 74)) ||   // Cmd+Option+I or Cmd+Option+J (Mac)
+          (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) ||               // Ctrl+U or Ctrl+S (Windows)
+          (e.metaKey && (e.keyCode === 85 || e.keyCode === 83))                 // Cmd+Option+U or Cmd+Option+S (Mac)
+      ) {
+          e.preventDefault();
+          console.warn('Developer shortcuts are blocked.');
+      }
+    });
+    
+    // Wait for the DOM to be loaded before executing the script
+    // Made by A.I.
+    document.addEventListener('DOMContentLoaded', function () {
+        // Select all alerts
+        var alerts = document.querySelectorAll('.alert-dismissible');
+        // Iterate over each alert
+        alerts.forEach(function (alert) {
+            // Set a timeout to automatically dismiss the alert after 4 seconds (4000 milliseconds)
+            setTimeout(function () {
+                // Use Bootstrap's jQuery method if available
+                if (window.jQuery) {
+                    $(alert).alert('close');
+                } else {
+                    // If Bootstrap's jQuery is not available, use the native click event on the button
+                    alert.querySelector('button[data-bs-dismiss="alert"]').click();
+                }
+            }, 4000); // 4000 milliseconds = 4 seconds
+        });
+    });
+  </script>
+
+  {% block scripts %}
+  
+  {% endblock %}
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg sticky-top navbar-light gradient-custom">
+    <div class="container-fluid">
+
+      <a class="navbar-brand" href="{{ url_for('job_board_page') }}">Logo</a>
+
+      <!--User is Singed-In -->
+      {% if current_user.is_authenticated %}
+
+      <!--User does not have a profile yet-->
+      {% if current_user.isTeacher == None %}
+      <a class="navbar-brand" href="{{ url_for('create_profile') }}">
+        <span class="text-success">Create a Profile!</span></a>
+      </a>
+      {% endif %}
+
+      <!--User is Teacher-->
+      {% if current_user.isTeacher == True %}
+      <a class="navbar-brand" href="{{ url_for('teacher_profile') }}"> 
+        <span class="text-info">{{current_user.username}}</span>
+      </a>
+      {% endif %}
+
+      <!--User is Recruiter-->
+      {% if current_user.isTeacher == False %}
+      <a class="navbar-brand" href="{{ url_for('recruiter_profile') }}"> <span
+          class="text-info">{{current_user.username}}</span>
+      </a>
+
+      {% endif %}
+
+      <!--No current logged-in user-->
+      {% else %}
+
+      <a class="nav-link" href="{{ url_for('home_page') }}">
+        <span class="text-success">Login or Create accout</span></a>
+      </a>
+
+      {%endif%}
+
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Nav bar items, collapsed when small screen-->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('home_page') }}">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('job_board_page') }}">Korean Job Board</a>
+          </li>
+
+          <!-- curren_user is authenticated-->
+          {% if current_user.is_authenticated %}
+
+          {% if current_user.isTeacher %}
+          <li class="nav-item">
+            <a class="nav-link">
+              Easy Apply: <span href="#sike" class="text-success">{{current_user.budget}} tokens</span></a>
+            </a>
+          </li>
+          {% endif %}
+
+          {% if current_user.isTeacher == false %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('job_post_creation') }}">
+              Create a Job: <span class="text-success">{{current_user.budget}} posts available</span></a>
+            </a>
+          </li>
+          {% endif %}
+
+          <!-- curren_user does not have a profile-->
+          {% if current_user.isTeacher == None %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('create_profile') }}">Create a Profile</a>
+            </li>
+          {% endif %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout_page') }}">Logout</a>
+          </li>
+
+         
+
+          <!--No current logged-in user-->
+          {% else %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login_page') }}">Login</a>
+          </li>
+          {% endif %}
+
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Error messages-->
+  <div class="text-center align-items-center">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show " role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+  </div>
+
+  {% block content %}
+
+  {% endblock %}
+
+  {% block footer %}
+  <footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+    <p class="text-center text-muted">
+      © 2024 Developed by
+      <span>
+        <a href="https://viruscat.com/" tabindex="-1" aria-disabled="true">
+          Fred
+        </a>
+      </span>
+    </p>
+
+  </footer>
+
+  {% endblock %}
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

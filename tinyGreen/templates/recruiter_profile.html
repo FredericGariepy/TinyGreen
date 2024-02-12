@@ -1,0 +1,45 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+{{current_user.username}} Recruiter Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
+    <div class="container">
+        
+        <h1 class="display-2">{{current_user.username}} Recruiter Profile</h1>
+        <hr>
+        <p class="lead font-weight-normal">Your profile</p>
+        <div>
+            {{recruiter_profile.contact_email_address}}
+        </div>
+        <hr>
+        <p class="lead font-weight-normal">Your active Jobs</p>
+        <hr>
+        <div>
+            {% for job in jobs_posted %}
+
+            <!--Job Card-->
+            <div class="card">
+                <ul class="list-group list-group-flush text-start">
+                    <li class="list-group-item">Title: {{job.title}}</li>
+                    <li class="list-group-item">Location: {{job.location}}</li>
+                    <li class="list-group-item">Salary: {{ job.salary }}</li>
+                </ul>
+            </div>
+
+            <!-- Job Applicants-->
+            <a href="{{ url_for('job_post_applicants', job_post_id=job.id, recruiter_id=recruiter_profile.id) }}" class="btn btn-outline-primary">View Applicants</a>
+            
+            <a href="{{ url_for('job_post', job_post_id=job.id) }}" class="btn btn-outline-primary">View your Post</a>
+
+            <hr>
+
+            {% endfor %}
+        </div>
+            
+    </div>
+</div>
+
+{% endblock %}

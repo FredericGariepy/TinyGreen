@@ -1,0 +1,33 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+
+<main class="form-signin text-center">
+    <br>
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <form method="POST" class="form-signin" style="max-width: 330px; margin:auto;">
+            
+            {{ form.hidden_tag() }} <!--protect CSRF -->
+
+            <div class="form-floating">
+                {{ form.username(class="form-control",id="floatingInput",placeholder="") }}
+                <label for="floatingInput">Username or Email</label>
+            </div>
+            <div class="form-floating mt-3">
+                {{ form.password(class="form-control", id="floatingPassword",placeholder="") }}
+                <label for="floatingPassword">Password</label>
+            </div>
+
+            {{ form.submit(class="w-100 btn btn-lg btn-primary mt-3") }}
+            
+            <div class="mt-5 mb-3">
+            <h1 class="h3 mb-3 fw-normal">Don't have an account?</h1>
+                <h6>Create one for free</h6>
+                <a class="btn btn-info text-light" href="{{ url_for('register_page')}}">Create an Account</a>
+            </div>
+        </form>
+</main>
+{% endblock %}

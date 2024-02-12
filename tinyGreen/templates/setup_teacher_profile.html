@@ -1,0 +1,44 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+Set up Teacher Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
+    <div class="container">
+        
+        <h1 class="display-2">Create Teacher Profile</h1>
+        <hr>
+        <p class="lead font-weight-normal">Get started</p>
+        
+            <form method="POST">
+                {{ form.hidden_tag() }} <!--protect CSRF -->
+                <div>
+                    {{ form.isNativeEnglish.label }}<br>
+                    {{ form.isNativeEnglish(class="form-select mb-3") }}
+                </div>
+                <div>
+                    {{ form.yearsOfExperience.label }}<br>
+
+                    {{ form.yearsOfExperience(class="form-select mb-3")}}
+                </div>
+                <div>
+                    {{ form.visaType.label }}<br>
+
+                    {{ form.visaType (class="form-select mb-3")}}
+                </div>
+                <div>
+                {{ form.contact_email_address.label() }}
+                {{ form.contact_email_address(class="form-control",placeholder="Your job contact email address") }}
+                </div>
+                <div>
+                    <br>
+                    {{ form.submit(class="btn btn-lg btn-success") }}
+                </div>
+
+            </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+Create Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
+    <div class="container">
+
+        <h1 class="display-2">Create Profile</h1>
+        <hr>
+        <h1 class="h3 mb-3 fw-normal">Are you a <b>teacher</b> or a <b>recruiter</b>?</h1>
+        
+        <div class="d-flex justify-content-center">
+            <div class="mb-3 p-2 m-2">
+                <h1 class="h3 mb-3 fw-normal">I am a Teacher</h1>
+                <h6>reach jobs <i>faster</i></h6>
+                <a class="mb-3 p-2 m-2 fw-normal fs-4 btn btn-info text-light " href="{{ url_for('setup_teacher_profile')}}">Make a <b>teacher</b> Profile</a>
+            </div>
+            <div class="mb-3 p-2 m-2">
+                <h1 class="h3 mb-3 fw-normal">I am a Recruiter</h1>
+                <h6>post jobs</h6>
+                <a class="mb-3 p-2 m-2 fs-4 fw-light btn btn-info text-light" href="{{ url_for('setup_recruiter_profile')}}">Make a <b>recruiter</b> Profile</a>
+            </div>
+        </div>
+        <div class="mt-5 mb-3">
+            <p class="lead font-weight-normal">You can finish creating a profile later and browse jobs now</p>
+            <a class="btn btn-outline-success" href="{{ url_for('job_board_page')}}">Browse jobs</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

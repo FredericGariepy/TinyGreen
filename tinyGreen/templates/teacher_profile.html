@@ -1,0 +1,123 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+{{current_user.username}} Teacher Profile
+{% endblock %}
+
+{% block content %}
+<div class="col-lg-8 mx-auto p-3 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                <path fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+            </svg>
+            <span class="fs-4 ms-4">{{current_user.username}}</span>
+        </a>
+    </header>
+
+    <main>
+        <h1>Your profile</h1>
+        <p class="lead font-weight-normal">View or eddit your profile</p>
+        <div class="row g-5">
+            <div class="col-md-6">
+                <span class="fs-4">Public information</span>
+                <ul class="list-group list-group-flush mt-4">
+                    <li class="list-group-item">
+                        {{teacher_profile.contact_email_address}}
+                    </li>
+                    <li class="list-group-item">
+                        {{teacher_profile.visaType}}
+                    </li>
+                    <li class="list-group-item">
+                        {{teacher_profile.yearsOfExperience}}
+                    </li>
+                    <li class="list-group-item">
+                        Native English: {{teacher_profile.nativeEnglish}}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <span class="fs-4">Account information</span>
+                <ul class="list-group list-group-flush mt-4">
+                    <li class="list-group-item">
+                        {{current_user.email_address}}
+                    </li>
+                    <li class="list-group-item">
+                        {{current_user.budget}}
+                    </li>
+                    <li class="list-group-item">
+                        {{teacher_profile.email_confirmed_date}}
+                    </li>
+                </ul>
+            </div>
+
+            <!--<<>> <<>> <<>> <<>>-->
+            <div class="col-md-12">
+
+                <table class="table table-responsive mb-0 bg-white p-4 shadow-sm">
+                    <thead>
+                        <tr>
+                            <th>Job</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs_applied %}
+                        <tr>
+
+                            <td class="align-middle">
+                                <div class="">
+                                    <a href="{{ url_for('job_post', job_post_id=job.job_post.id) }}" class="btn btn-outline-primary">
+                                        <h5 class="mb-0">{{job.job_post.job_type}}</h5>
+                                        {{job.job_post.location}}
+                                    </a>
+                                    {% set days_since_application = (current_datetime - job.date_applied).days %}
+                                    <span class="text-muted">
+                                        <br>
+                                        {% if days_since_application < 1 %} recently applied {% else %}
+                                            {{days_since_application}} days ago {% endif %} </span>
+                                </div>
+                            </td>
+
+                            <td class="align-middle">
+                                {% if job.is_shortlisted %}
+                                <div class="d-flex flex-column align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-check text-success" viewBox="0 0 16 16">
+                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                      </svg>
+                                      <span class="text-muted">shortlisted</span>
+                                </div>
+                                {% elif job.is_shortlisted == none %}
+                                <div class="d-flex flex-column align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-clock-history text-muted" viewBox="0 0 16 16">
+                                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
+                                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
+                                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
+                                    </svg>
+                                    <span class="text-muted">pending review</span>
+                                </div>
+                                {% else %}
+                                <div class="d-flex flex-column align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
+                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                    </svg>
+                                    <span class="text-muted">not chosen</span>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

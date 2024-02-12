@@ -1,0 +1,38 @@
+{% extends 'base_layout.html'%}
+{% block title %}
+Register
+{% endblock %}
+
+{% block content %}
+<main class="form-signin text-center">
+    <br>
+    <h1 class="h3 mb-3 fw-normal">Please register your account</h1>
+   
+    <form method="POST"  class="form-signin" style="max-width: 330px; margin:auto;">
+            {{ form.hidden_tag() }} <!--protect CSRF -->
+
+            {{ form.username.label() }}
+            <div id="emailHelp" class="form-text">Choose a username that you will remember.</div>
+            {{ form.username(class="form-control",placeholder="User Name") }}
+            <br>
+            {{ form.email_address.label() }}
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            {{ form.email_address(class="form-control",placeholder="Email Address") }}
+            <br>
+            {{ form.password1.label() }}
+            {{ form.password1(class="form-control",placeholder="New password") }}
+            <br>
+            {{ form.password2.label() }}
+            {{ form.password2(class="form-control",placeholder="Confirm password") }}
+            <br>
+            {{ form.submit(class="btn btn-lg btn-success")}}
+            
+            <hr>
+            
+            <div class="mt-5 mb-3">
+                <h1 class="h3 mb-3 fw-normal">Already have an account?</h1>
+                <a class="btn btn-info text-light" href="{{ url_for('login_page')}}">Sign in</a>
+            </div>
+        </form>
+</main>
+{% endblock %}

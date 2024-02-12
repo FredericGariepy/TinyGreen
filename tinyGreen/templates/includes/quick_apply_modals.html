@@ -1,0 +1,39 @@
+<!-- Button trigger modal 
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+  -->
+  <style>
+    .modal-content{
+      color: rgb(30, 29, 29);
+
+    }
+  </style>
+  <!-- Modal -->
+  <div class="modal fade" id="job-apply-modal-{{job.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content container">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Easy Apply</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form method="POST">
+          {{ quick_apply_job.hidden_tag() }} <!--protect CSRF -->
+          <div class="modal-body text-center">
+            <div class="fs-3 fw-normal text-start">Apply to:</div>
+            <span class="fs-3 fw-bold">{{job.title}}</span>
+          </div>
+          
+          <input id="job_applied" name="job_applied" type="hidden" value={{job.id}}>
+          {{quick_apply_job.submit(class="btn btn-success btn-block")}}
+          <div class="form-text">By clicking 'Apply Now' you will apply to this job.</div>
+
+        </form>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
