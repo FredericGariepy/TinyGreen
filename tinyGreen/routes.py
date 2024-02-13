@@ -44,9 +44,6 @@ def job_post(job_post_id):
     # Fetch specific job post
     job_post = JobPost.query.get(job_post_id)
 
-    # Check if the user has already applied to the job
-    existing_application = JobApplicant.query.filter_by(job_post_id = job_post_id, teacher_id = current_user.id).first()
-
     # Check if the job does not exist
     if job_post is None:
         flash('Job not available', 'info')
@@ -64,6 +61,10 @@ def job_post(job_post_id):
         'adlt_student': 'Adult',
     }
 
+    existing_application = None  #Define existing_application before the if block
+    if current_user.isTeacher:
+        # Check if the user has already applied to the job
+        existing_application = JobApplicant.query.filter_by(job_post_id = job_post_id, teacher_id = current_user.id).first()
 
     quick_apply_job = QuickApplyJob()
     if request.method == "POST":
@@ -72,7 +73,7 @@ def job_post(job_post_id):
         
         if current_user.isTeacher:
             #Check if Job exists
-            if job_applied_object: 
+            if job_applied_object:
 
                 # Check if the user has already applied to the job
                 if not existing_application:
