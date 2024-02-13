@@ -114,7 +114,7 @@ class JobForm(FlaskForm):
     location = SelectField(label='Location',choices=location_choices, validators=[DataRequired()])
     location_details = StringField(label='Location details', validators=[DataRequired(), Length(max=80)])
     
-    salary = IntegerField(label='Salary', validators=[DataRequired(), Length(max=8)])
+    salary = IntegerField(label='Salary', validators=[DataRequired(), NumberRange(min=0, max=99999999)])
     salary_type_choices = [
         ('Month', 'Monthly'),
         ('Hour', 'Hourly'),
@@ -141,8 +141,8 @@ class JobForm(FlaskForm):
     airfare = BooleanField(label='Airfare Reimbursement', default=False)
     severance = BooleanField(label='Severance', default=False)
     housing = BooleanField(label='Housing Provided', default=False)
-    housing_allowance = IntegerField(label='Housing Allowance', validators=[Optional(), Length(max=7)])
-    vacation_days = IntegerField(label='Vacation Days', validators=[Optional(), Length(max=2)])
+    housing_allowance = IntegerField(label='Housing Allowance', validators=[Optional(),NumberRange(min=0, max=9999999)])
+    vacation_days = IntegerField(label='Vacation Days', validators=[Optional(), NumberRange(min=0, max=999)])
 
     #WorkScheduleForm section (insted of using two forms) 
     # handled is handled in the route on submmit
