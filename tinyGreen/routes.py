@@ -61,10 +61,13 @@ def job_post(job_post_id):
         'adlt_student': 'Adult',
     }
 
+    #there might be a better way... this is kinda rough
     existing_application = None  #Define existing_application before the if block
-    if current_user.isTeacher:
-        # Check if the user has already applied to the job
-        existing_application = JobApplicant.query.filter_by(job_post_id = job_post_id, teacher_id = current_user.id).first()
+    try:
+        if current_user.isTeacher:    
+            existing_application = JobApplicant.query.filter_by(job_post_id = job_post_id, teacher_id = current_user.id).first()
+    except:
+        pass
 
     quick_apply_job = QuickApplyJob()
     if request.method == "POST":
@@ -73,7 +76,7 @@ def job_post(job_post_id):
         
         if current_user.isTeacher:
             #Check if Job exists
-            if job_applied_object:
+            if job_applied_object: 
 
                 # Check if the user has already applied to the job
                 if not existing_application:

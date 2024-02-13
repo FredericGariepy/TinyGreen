@@ -63,8 +63,6 @@ Job Post
         return hours + ':' + minutes + ' ' + ampm;
     }
 
-
-
      // Function to set visibility for a specific day
     function setDayVisibility(daySchedule, previewScheduleId, previewScheduleIdRow, previewScheduleIdStart, previewScheduleIdEnd, dayStartTime, dayEndTime) {
         if (daySchedule) {
@@ -376,8 +374,6 @@ Job Post
         document.getElementById('preview-unspecified-schedule-div').style.display = unspecifiedScheduleVisibility;
     });
 });
-
-
 </script>
 
 <script>
@@ -465,6 +461,30 @@ Job Post
         }
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        $('#job-salary, #vacationDaysField, #housingAllowanceField').on('input', function () {
+            var maxLength;
+            switch ($(this).attr('id')) {
+                case 'job-salary':
+                    maxLength = 8;
+                    break;
+                case 'vacationDaysField':
+                    maxLength = 3;
+                    break;
+                case 'housingAllowanceField':
+                    maxLength = 7;
+                    break;
+            }
+            var value = $(this).val();
+            if (value.length > maxLength) {
+                $(this).val(value.slice(0, maxLength));
+            }
+        });
+    });
+</script>
+
 {% endblock %}
 
 {% block content %}
@@ -543,7 +563,8 @@ Job Post
                 <!-- Salary & negotiable-->
                 <div class="mb-3 input-group input-group">
                     {{ form.salary.label(class="input-group-text") }}
-                    {{ form.salary(id="job-salary",class="form-control",placeholder="Salary") }}
+                    {{ form.salary(id="job-salary",class="form-control",placeholder="Salary", maxlength=8) }}
+
                     <label class="input-group-text"><span>&#8361;</span></label>
                     {{ form.salary_payment_type(id="job-payment-type",class="form-control") }}
 
