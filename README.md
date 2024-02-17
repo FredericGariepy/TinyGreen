@@ -3,19 +3,23 @@
  Providing transparency in a niche market riddled with labor issues!
 
 ### To run project locally (*7 steps*)
-#### 1. make a new directory
-Create a new directory named "TinyGreen" and navigating into it.
+#### 1. make a new directory for the project to live in.
+Create a new directory and navigate into it.
 
-`mkdir TinyGreen`
+`mkdir PROJECT_FOLDER`
 
-`cd TinyGreen`
-#### 2. git clone this repository 
+`cd PROJECT_FOLDER`
+#### 2. git clone this repository. 
 Use git clone to clone the repository into the newly created directory.
 
 `git clone https://github.com/FredericGariepy/TinyGreen/.git`
 
-#### 3. Actiate python virtual environment 
-Create and activate a Python virtual environment named "venv". 
+#### 3. Activate python virtual environment. 
+Go into the the TinyGreen directory
+
+`cd TinyGreen`
+
+Inside TinyGreen, create and activate a Python virtual environment named "venv". 
 
 On macOS and Linux:
 
@@ -38,8 +42,18 @@ You will install the required packages using the pip package manager inside your
 
 `pip install -r requirements.txt`
 
-#### 5. Initalize a SQLite databse
+#### 5. Initalize a SQLite databse.
 Use python to create a local SQLite database to interact with the project locally
+
+`flask db init`
+
+`flask db migrate -m "Initial migration"`
+
+`flask db upgrade`
+
+*IF for some reason you do not want to be inside the python venv anymore, Do the following:*
+
+* Otherwise, simply **continue to step 6.**
 
 `python`
 
@@ -49,6 +63,7 @@ with app.app_context():
     db.create_all()
 ```
 Press Enter, then type `exit()` and press Enter again to exit the Python interpreter.
+
 
 #### 6. Making the myconfig.py file
 Navigate into the "tinyGreen" project file folder and create the **myconfig.py** file..
@@ -93,6 +108,12 @@ save & exit
 
 #### 7. Run the project and open Browser with URL http://127.0.0.1:5000
 You will finally run the project locally and access it through your browser!
+
+`flask run`
+
+*IF for some reason you left the python venv, Do the following:*
+
+* Otherwise, simply **continue.**
 
 `python run.py`
 
