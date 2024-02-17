@@ -8,17 +8,13 @@ from sqlalchemy.orm import joinedload
 
 from datetime import datetime
 
-# this could be a nice way to cache css
-#@app.route('/static/css/styles.css')
-#def static_file(filename):
-#    cache_timeout = 600  # in seconds
-#    return send_from_directory(os.path.join(app.root_path, 'static'), filename, cache_timeout=cache_timeout)
+# css caching is handled in nginx
 
+@app.route('/')
 @app.route('/home')
 def home_page():
     return render_template("home.html")
 
-@app.route('/')
 @app.route('/job_board',methods=['GET','POST'])
 def job_board_page():
 
