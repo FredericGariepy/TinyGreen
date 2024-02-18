@@ -2,6 +2,8 @@
 > A job board specifically designed for ESL teachers and recruiters in Korea.<br>
  Providing transparency in a niche market riddled with labor issues!
 
+###### Current Live version (2024): https://fredy.ninja/job_board
+
 ### To run project locally (*7 steps*)
 #### 1. make a new directory for the project to live in.
 Create a new directory and navigate into it.
